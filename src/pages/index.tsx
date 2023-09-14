@@ -48,11 +48,25 @@ export default function Home() {
     });
   }, [socket]);
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
+  const submit = () => {
     setNewMessage("");
 
     socket?.emit(NEW_MSG_CHANNEL, { message: newMessage });
+  };
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+
+    submit();
+  };
+
+  const onEnterPress = (e: React.KeyboardEvent) => {
+    console.log(e.shiftKey);
+
+    if (e.key == "Enter" && e.shiftKey == false) {
+      e.preventDefault();
+      submit();
+    }
   };
 
   return (
@@ -82,6 +96,7 @@ export default function Home() {
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           maxLength={255}
+          onKeyDown={onEnterPress}
         />
 
         <Button className="h-full" type="submit">
